@@ -11,4 +11,9 @@ export class CreateStaffScheduleRequest {
 	@Type(() => Number)
 	@Expose({ name: 'shift_id' })
 	shiftId: number;
+
+	@IsNumber()
+	@Type(() => Number)
+	@Expose({ name: 'company_id' })
+	companyId: number;
 }

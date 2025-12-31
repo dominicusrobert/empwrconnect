@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsEnum, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsDateString } from 'class-validator';
 
 import { AppointmentStatuEnum } from '../enums/appointment-status.enum';
 
@@ -14,10 +14,13 @@ export class BookAppointmentRequest {
 	@Expose({ name: 'client_id' })
 	clientId: number;
 
-	@IsNumber()
-	@Type(() => Number)
-	@Expose({ name: 'staff_id' })
-	staffId: number;
+	@IsDateString()
+	@Expose({ name: 'starts_at' })
+	startsAt: string;
+
+	@IsDateString()
+	@Expose({ name: 'ends_at' })
+	endsAt: string;
 
 	@IsNumber()
 	@Type(() => Number)

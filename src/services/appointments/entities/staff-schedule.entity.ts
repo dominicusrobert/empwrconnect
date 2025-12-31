@@ -10,6 +10,9 @@ export class StaffScheduleEntity extends BaseEntity {
 	@PrimaryGeneratedColumn({ type: 'bigint' })
 	id: number;
 
+	@Column({ name: 'company_id', type: 'bigint' })
+	companyId: number;
+
 	@Column({ name: 'staff_id', type: 'bigint' })
 	staffId: number;
 

@@ -10,7 +10,7 @@ import { DataSourceModule } from '../../systems/data-source/data-source.module';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule, DataSourceModule],
-  controllers: [UsersController],
+  	controllers: [UsersController],
 	providers: [UsersService, UserRepository],
 })
 export class UsersModule {}

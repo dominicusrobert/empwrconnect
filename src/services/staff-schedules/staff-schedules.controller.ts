@@ -5,7 +5,7 @@ import { CreateStaffScheduleRequest } from './dto/create-staff-schedule.request'
 
 import { Permissions } from '../../utils/decorators/permission.decorator';
 import { PermissionEnum } from '../permissions/enums/permission.enum';
-import { BaseResponse } from 'src/base/base.response';
+import { BaseResponse } from '../../base/base.response';
 
 @Controller('staff-schedules')
 export class StaffSchedulesController {

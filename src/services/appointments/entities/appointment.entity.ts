@@ -9,14 +9,28 @@ export class AppointmentEntity extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
+	@Column({ name: 'idempotency_key', type: 'varchar', length: 100, unique: true })
+	idempotencyKey: string;
+
 	@Column({ name: 'company_staff_schedule_id', type: 'bigint' })
 	companyStaffScheduleId: number;
 
 	@Column({ name: 'client_id', type: 'bigint' })
 	clientId: number;
 
-	@Column({ name: 'staff_id', type: 'bigint' })
-	staffId: number;
+	@Column({ name: 'starts_at', type: 'timestamptz' })
+	startsAt: Date;
+
+	@Column({ name: 'ends_at', type: 'timestamptz' })
+	endsAt: Date;
+
+	@Column({
+		name: 'time_range',
+		type: 'tstzrange',
+		asExpression: "tstzrange(starts_at, ends_at, '[)')",
+		generatedType: 'STORED',
+	})
+	timeRange: string;
 
 	@Column({ name: 'location_id', type: 'int', nullable: true })
 	locationId: number | null;
@@ -32,7 +46,4 @@ export class AppointmentEntity extends BaseEntity {
 	@JoinColumn({ name: 'client_id' })
 	client: UserEntity;
 
-	@ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
-	@JoinColumn({ name: 'staff_id' })
-	staff: UserEntity;
 }

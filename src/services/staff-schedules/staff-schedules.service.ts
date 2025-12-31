@@ -22,6 +22,7 @@ export class StaffSchedulesService {
 		}
 
 		const toSave = this.staffScheduleRepo.create({
+			companyId: request.companyId,
 			staffId: request.staffId,
 			shiftId: request.shiftId,
 		});

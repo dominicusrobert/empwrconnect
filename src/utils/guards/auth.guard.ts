@@ -91,18 +91,10 @@ export class AuthGuard implements CanActivate {
 			throw new BadRequestException('Token is Empty');
 		}
 
-		let payload;
-
 		try {
-			payload = await this.jwtService.verifyAsync(token, { secret });
+			return await this.jwtService.verifyAsync(token, { secret });
 		} catch (e) {
-			throw new UnauthorizedException('Token is invalid');
+			throw new UnauthorizedException('Token is invalid or expired');
 		}
-
-		if (!payload.exp || payload.exp < new Date().getTime() / 1000) {
-			throw new UnauthorizedException('Token is expired');
-		}
-
-		return payload;
 	}
 }
