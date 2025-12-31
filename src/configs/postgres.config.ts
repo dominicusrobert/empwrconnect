@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { AuditPostgreSQLSubscriber } from '../utils/audit-trails/audit-postgresql.subscriber';
 
 @Injectable()
 export class PostgresConfigService implements TypeOrmOptionsFactory {
@@ -15,6 +16,7 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
 			password: this.configService.get<string>('POSTGRES_DB_PASS'),
 			database: this.configService.get<string>('POSTGRES_DB_NAME'),
 			entities: [__dirname + '/../services/**/entities/*.entity{.ts,.js}'],
+			subscribers: [AuditPostgreSQLSubscriber],
 		};
 	}
 }
