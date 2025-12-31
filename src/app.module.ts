@@ -1,24 +1,27 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { MongooseModule } from '@nestjs/mongoose';
-import { AppointmentsModule } from './services/appointments/appointments.module';
-import { LocationsModule } from './services/locations/locations.module';
-import { StaffsModule } from './services/staffs/staffs.module';
-import { ClientsModule } from './services/clients/clients.module';
-import { UsersModule } from './services/users/users.module';
-import { CompaniesModule } from './services/companies/companies.module';
+import { ServicesIndexModule } from './services';
+import { PostgresConfigService } from './configs/postgres.config';
+import { JwtConfigService } from './configs/jwt.config';
+import { DataSourceModule } from './data-source/data-source.module';
+import { RolesModule } from './services/roles/roles.module';
+import { PermissionsModule } from './services/permissions/permissions.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/nest'),
-    AppointmentsModule,
-    LocationsModule,
-    StaffsModule,
-    ClientsModule,
-    CompaniesModule,
-    UsersModule,
+		ConfigModule.forRoot({ isGlobal: true }),
+		TypeOrmModule.forRootAsync({ useClass: PostgresConfigService }),
+		JwtModule.registerAsync({ useClass: JwtConfigService }),
+    ServicesIndexModule,
+    DataSourceModule,
+    RolesModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

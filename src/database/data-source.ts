@@ -11,5 +11,6 @@ export const AppDataSource = new DataSource({
 	username: process.env.POSTGRES_DB_USER ?? 'postgres',
 	password: process.env.POSTGRES_DB_PASS ?? 'password',
 	database: process.env.POSTGRES_DB_NAME ?? 'mydb',
-	migrations: [__dirname + '/migrations/*{.js,.ts}']
+    entities: [__dirname + '/../services/**/entities/*.entity{.js,.ts}'],
+	migrations: [__dirname + '/migrations/*{.js,.ts}', __dirname + '/seeders/*{.js,.ts}']
 });
