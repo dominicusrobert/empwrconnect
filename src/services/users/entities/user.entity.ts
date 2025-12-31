@@ -1,26 +1,11 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { RoleEntity } from "../../../services/roles/entities/role.entity";
 import { BaseEntity } from "../../../base/base.entity";
+import { UserRoleCompanyEntity } from "./user-role-company.entity";
 
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
-
-    constructor(name: string, email: string, password: string, status: string) {
-        super();
-
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
-
-    /** ****************************************************************** **/
-    /**                              Columns                               **/
-    /** ****************************************************************** **/
-
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -40,17 +25,6 @@ export class UserEntity extends BaseEntity {
     /**                             Relations                              **/
     /** ****************************************************************** **/
 
-	@ManyToMany(() => RoleEntity, (role) => role.users)
-	@JoinTable({
-		name: 'users_roles',
-		joinColumn: {
-			name: 'user_id',
-			referencedColumnName: 'id',
-		},
-		inverseJoinColumn: {
-			name: 'role_id',
-			referencedColumnName: 'id',
-		},
-	})
-	roles: RoleEntity[];
+	@OneToMany(() => UserRoleCompanyEntity, (urc) => urc.user)
+	userRolesCompanies: UserRoleCompanyEntity[];
 }

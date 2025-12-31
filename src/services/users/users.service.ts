@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 
-import { DataSourceService } from '../../data-source/data-source.service';
+import { DataSourceService } from '../../systems/data-source/data-source.service';
 
 import { LoginRequest } from './dto/login.request';
 import { LoginResponse } from './dto/login.response';
@@ -13,6 +13,7 @@ import { SignupRequest } from './dto/signup.request';
 import { SignupResponse } from './dto/signup.response';
 import { TokenUserDetail } from '../../utils/dto/token-user-detail.dto';
 import { UserEntity } from './entities/user.entity';
+import { UserRoleCompanyEntity } from './entities/user-role-company.entity';
 
 
 @Injectable()
@@ -29,8 +30,8 @@ export class UsersService {
     async signup(request: SignupRequest): Promise<SignupResponse> {
 		const password = await hashPassword(request.password);
 
-		await this.dataSource.transaction(new TokenUserDetail(), async (queryRunner) => {
-			const savedUser = await queryRunner.save(
+		await this.dataSource.transaction(new TokenUserDetail(), async (manager) => {
+			const savedUser = await manager.save(
 				UserEntity,
 				{ 
 					name: request.name,
@@ -40,10 +41,17 @@ export class UsersService {
 				},
 			);
 
-			const roleEntities = request.roleIds.map((id) => ({ id }));
+			if (request.roleIds?.length) {
+				const userRolesCompanies = request.roleIds.map((roleId) =>
+					manager.create(UserRoleCompanyEntity, {
+						userId: savedUser.id,
+						roleId,
+						companyId: request.companyId,
+					}),
+				);
 
-			savedUser.roles = roleEntities as any;
-			await queryRunner.save(UserEntity, savedUser);
+				await manager.save(UserRoleCompanyEntity, userRolesCompanies);
+			}
 		});
 
 		return new SignupResponse();
@@ -57,7 +65,10 @@ export class UsersService {
 			throw new UnauthorizedException('This credential does not match with our record!');
 		}
 
-        const jwtPayload = await this.userRepo.generateJwtPayload(request.email);
+        const jwtPayload = await this.userRepo.generateJwtPayload(
+			request.email,
+			request.companyId
+		);
 		const jwtOptions = this.generateJwtSignOptions();
 		const token = this.jwtService.sign(jwtPayload, jwtOptions);
 

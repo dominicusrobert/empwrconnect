@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, EntityManager } from 'typeorm';
 
-import { TokenUserDetail } from '../utils/dto/token-user-detail.dto';
+import { TokenUserDetail } from '../../utils/dto/token-user-detail.dto';
 
 @Injectable()
 export class DataSourceService {

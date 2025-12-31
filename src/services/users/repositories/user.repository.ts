@@ -23,19 +23,30 @@ export class UserRepository extends BaseRepository<UserEntity> {
 		return user;
 	}
 
-	async generateJwtPayload(email: string) {
+	async generateJwtPayload(email: string, companyId: number) {
 		const user = await this.findOne({
 			where: { email },
-			relations: ['roles'],
+			relations: [
+				'userRolesCompanies',
+				'userRolesCompanies.role',
+				'userRolesCompanies.role.rolePermissions',
+				'userRolesCompanies.role.rolePermissions.permission',
+			],
 		});
 
 		if (!user) {
 			throw new NotFoundException('User Role not found');
 		}
 
-        return {
+		const urc = user.userRolesCompanies?.find((row) => row.companyId == companyId);
+		const permissions =
+			urc?.role?.rolePermissions?.map((rp) => rp.permission?.name).filter(Boolean) ?? [];
+
+		return {
 			userId: user.id,
 			userName: user.name,
+			companyId,
+			permissions,
 		};
 	}
 

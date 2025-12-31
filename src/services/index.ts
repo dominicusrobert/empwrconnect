@@ -5,6 +5,8 @@ import { StaffsModule } from "./staffs/staffs.module";
 import { ClientsModule } from "./clients/clients.module";
 import { CompaniesModule } from "./companies/companies.module";
 import { UsersModule } from "./users/users.module";
+import { RolesModule } from "./roles/roles.module";
+import { PermissionsModule } from "./permissions/permissions.module";
 
 @Module({
 	imports: [
@@ -14,6 +16,8 @@ import { UsersModule } from "./users/users.module";
         LocationsModule,
         StaffsModule,
         UsersModule,
+        RolesModule,
+        PermissionsModule,
 	],
 })
 export class ServicesIndexModule {}
